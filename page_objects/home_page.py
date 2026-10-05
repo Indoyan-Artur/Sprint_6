@@ -1,45 +1,21 @@
-from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+
+from locators.home_page_locators import HomePageLocators
+from page_objects.base_page import BasePage
 
 
-class HomePage:
-    def __init__(self, driver):
-        self.driver = driver
+class HomePage(BasePage, HomePageLocators):
 
-    # Сколько это стоит? И как оплатить?
-    cost_of_scooter = (By.XPATH, ".//div[@id='accordion__heading-0' and @class='accordion__button']")
-    answer_cost_of_scooter = (By.XPATH, ".//div[@id='accordion__panel-0']/p")
+    def click_order_button(self, button_locator_name="the_top_button"):
+        button = getattr(self, button_locator_name)
+        self.wait.until(EC.element_to_be_clickable(button)).click()
 
-    # Хочу сразу несколько самокатов! Так можно?
-    several_scooters = (By.XPATH, ".//div[@id='accordion__heading-1' and @class='accordion__button']")
-    answer_several_scooters = (By.XPATH, ".//div[@id='accordion__panel-1']/p")
+    def click_faq_question(self, heading_locator_name):
+        heading = getattr(self, heading_locator_name)
+        self.scroll_to_element(heading)
+        self.wait.until(EC.element_to_be_clickable(heading)).click()
 
-    # Как рассчитывается время аренды?
-    time_calculation = (By.XPATH, ".//div[@id='accordion__heading-2' and @class='accordion__button']")
-    answer_time_calculation = (By.XPATH, ".//div[@id='accordion__panel-2']/p")
-
-    # Можно ли заказать самокат прямо на сегодня?
-    order_scooter_today = (By.XPATH, ".//div[@id='accordion__heading-3' and @class='accordion__button']")
-    answer_order_scooter_today = (By.XPATH, ".//div[@id='accordion__panel-3']/p")
-
-    # Можно ли продлить заказ или вернуть самокат раньше?
-    extend_return_earlier = (By.XPATH, ".//div[@id='accordion__heading-4' and @class='accordion__button']")
-    answer_extend_return_earlier = (By.XPATH, ".//div[@id='accordion__panel-4']/p")
-
-    # Вы привозите зарядку вместе с самокатом?
-    charging_and_scooter = (By.XPATH, ".//div[@id='accordion__heading-5' and @class='accordion__button']")
-    answer_charging_and_scooter = (By.XPATH, ".//div[@id='accordion__panel-5']/p")
-
-    # Можно ли отменить заказ?
-    cancel_the_order = (By.XPATH, ".//div[@id='accordion__heading-6' and @class='accordion__button']")
-    answer_cancel_the_order = (By.XPATH, ".//div[@id='accordion__panel-6']/p")
-
-    bring_beyond_mkad = (By.XPATH, ".//div[@id='accordion__heading-7' and @class='accordion__button']")
-    answer_bring_beyond_mkad = (By.XPATH, ".//div[@id='accordion__panel-7']/p")
-
-    # Кнопка верхняя
-    the_top_button = (By.XPATH, "//div[contains(@class,'Header_Nav')]/button[contains(@class,'Button_Button')]")
-
-    # Кнопка нижняя
-    the_bottom_button = (By.XPATH, "//div[contains(@class,'Home_FinishButton')]/button[contains(@class,'Button_Button')]")
-
-    
+    def get_faq_answer_text(self, answer_locator_name):
+        return self.wait.until(
+            EC.visibility_of_element_located(getattr(self, answer_locator_name))
+        ).text

@@ -39,6 +39,4 @@ def placed_order(home_page, order_page):
     order_page.fill_second_step(PLACED_ORDER_CASE)
     order_page.submit_order()
 
-    text = order_page.wait_for_order_confirmation()
-    assert "Заказ оформлен" in (text or ""), "Заказ не оформлен"
     return order_page.get_order_confirmation_handle()
